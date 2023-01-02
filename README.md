@@ -69,7 +69,7 @@ https://cmake.org/download/
 
  
 ```
-  - 완료된 라이버러리를 설치합니다.
+  - 완료된 라이러리를 설치합니다.
 
   mingw32-make install
 
