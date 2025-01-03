@@ -1,5 +1,14 @@
 # qt-window-opencv-install-guide
 
+```
+설치시 문제가 생긴다면
+CMakeLists.txt 파일 내부에
+![image](https://github.com/user-attachments/assets/0dd0fef7-f561-4359-bb5d-9a97c22b569e)
+
+set(CMAKE_CXX_STANDARD 14)
+추가하기
+   ```   
+
 ```opencv 공식 사이트에서 원하는 버전 다운로드 받는다.
 https://opencv.org/releases/
 2) OpenCV 설치하기
