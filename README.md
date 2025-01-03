@@ -114,3 +114,171 @@ LIBS += -Lc:\Users\Shoes\Documents\common\release\install\x64\mingw\bin \
 
 #include "opencv2/opencv.hpp"  
 ```
+
+Windows 10, C++, Qt 5, OpenCV 4.5.4 기준으로 설명하겠습니다.
+
+ 
+
+먼저 http://qt.mirror.constant.com/archive/qt/5.9/5.9.3/에서 Qt Creator를 다운받습니다.
+
+ 
+Index of /archive/qt/5.9/5.9.3/
+
+ 
+
+qt.mirror.constant.com
+다음으로 https://github.com/opencv/opencv/releases에서 opencv-4.5.4-vc14_vc15.exe를 다운받습니다.
+
+ 
+Releases · opencv/opencv
+
+Open Source Computer Vision Library. Contribute to opencv/opencv development by creating an account on GitHub.
+
+github.com
+
+
+CMake 설치 전 환경 변수를 설정합니다. 윈도우에서 시스템 환경 변수 편집을 검색하여 실행합니다. 아래 화면에서 환경 변수 클릭합니다.
+
+
+Path를 더블 클릭하여 아래 화면을 띄운 후 C:\Qt\Qt5.9.3\Tools\mingw530_32\bin\ (mingw530_32\bin 경로)를 추가합니다.
+
+
+
+다음으로 https://github.com/Kitware/CMake/releases/download/v3.22.0/cmake-3.22.0-windows-i386.msi에서 CMake를 설치합니다.
+
+
+설치 후 CMake를 실행 후 source code에 설치한 opencv 폴더 안의 sources 폴더를 build the binaries에는 빌드된 결과물을 저장할 폴더를 지정 후 Configure를 클릭합니다.
+
+
+다음 화면에서 아래와 같이 체크 후 Next를 클릭합니다. 
+
+ 
+
+다음으로 Compilers에서 C에는 Qt/Qt5.9.3/Tools/mingw530_32/bin/gcc.exe C++에는 Qt/Qt5.9.3/Tools/mingw530_32/bin/g++.exe을 선택합니다.
+
+
+마지막으로 Configurate를 클릭합니다.
+
+
+한번의 과정이 끝나고 아래처럼 항목들이 생겼다면 BUILD_QT, BUILD_OPENGL을 체크, CMAKE_BUILD_TYPE에 Debug 후 다시 Configure를 해줍니다.
+
+
+
+Configure이 끝났다면 마지막으로 Generate를 해줍니다.
+
+
+build the binaries에 설정한 경로에 Makefile이 생긴지 확인합니다.
+
+
+이제 Qt for Desktop (MinGW 5.3.0 32bit)를 실행 후 Makefile이 생성된 경로로 이동 mingw32-make를 실행합니다.
+
+
+마지막으로 mingw32–make install를 실행합니다.
+
+
+이제 설정한 경로 안 bin 폴더에 dll 파일이 생긴 것을 확인할 수 있습니다.
+
+
+다음으로 환경 변수에 해당 라이브러리 파일들이 있는 경로도 추가해줍니다.
+
+
+위 과정을 마치셨다면 Qt Creator를 실행 후 New Project > Qt Widgets Application 후 프로젝트를 생성합니다.
+
+
+
+
+pro 파일을 아래와 같이 설정합니다.
+
+#-------------------------------------------------
+#
+# Project created by QtCreator 2021-11-29T22:35:26
+#
+#-------------------------------------------------
+
+QT       += core gui
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+TARGET = Start
+TEMPLATE = app
+
+# The following define makes your compiler emit warnings if you use
+# any feature of Qt which has been marked as deprecated (the exact warnings
+# depend on your compiler). Please consult the documentation of the
+# deprecated API in order to know how to port your code away from it.
+DEFINES += QT_DEPRECATED_WARNINGS
+
+# You can also make your code fail to compile if you use deprecated APIs.
+# In order to do so, uncomment the following line.
+# You can also select to disable deprecated APIs only up to a certain version of Qt.
+#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+
+
+SOURCES += \
+        main.cpp \
+        imageload.cpp
+
+HEADERS += \
+        imageload.h
+
+FORMS += \
+        imageload.ui
+
+INCLUDEPATH += C:\OpenCV4.5.4\opencv\Qt_Lib\install\include
+
+LIBS += \
+    C:\OpenCV4.5.4\opencv\Qt_Lib\bin\libopencv_core454d.dll \
+    C:\OpenCV4.5.4\opencv\Qt_Lib\bin\libopencv_highgui454d.dll \
+    C:\OpenCV4.5.4\opencv\Qt_Lib\bin\libopencv_imgproc454d.dll \
+    C:\OpenCV4.5.4\opencv\Qt_Lib\bin\libopencv_imgcodecs454d.dll \
+main.cpp는 건들지 않고 ui cpp 파일을 아래와 같이 수정합니다.
+
+#include "imageload.h"
+#include "ui_imageload.h"
+#include <opencv2/opencv.hpp>
+#include <QDir>
+#include <QDebug>
+
+ImageLoad::ImageLoad(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::ImageLoad)
+{
+    ui->setupUi(this);
+
+    connect(ui->btnShowImage, SIGNAL(clicked()), this, SLOT(Slot_pushShowImageButton()));
+}
+
+ImageLoad::~ImageLoad()
+{
+    delete ui;
+}
+
+void ImageLoad::ShowDebugMessage(QString sMsg)
+{
+    qDebug() << sMsg;
+    ui->statusBar->showMessage(sMsg,3000);
+}
+
+void ImageLoad::Slot_pushShowImageButton()
+{
+    QString sImagePath = QApplication::applicationDirPath() + "/iu.jpg";
+    qDebug() << sImagePath;
+
+    QFile file(sImagePath);
+    if ( !file.exists() ) {
+        ShowDebugMessage("파일을 찾을 수 없습니다.");
+    }
+
+    cv::Mat image = cv::imread(sImagePath.toStdString(), cv::IMREAD_COLOR);
+
+    if ( image.empty() ) {
+        ShowDebugMessage("이미지 파일을 읽을 수 없습니다.");
+    }
+
+    cv::imshow("Image Test", image);
+    cv::waitKey(0);
+    cv::destroyAllWindows();
+}
+버튼을 누르면 아래와 설정한 이미지를 띄우게 됩니다.
+
+
