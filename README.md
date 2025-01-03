@@ -3,7 +3,8 @@
 ```
 설치시 문제가 생긴다면
 CMakeLists.txt 파일 내부에
-![image](https://github.com/user-attachments/assets/0dd0fef7-f561-4359-bb5d-9a97c22b569e)
+![스크린샷 2025-01-03 154508](https://github.com/user-attachments/assets/da8656a2-e160-4bf1-aec3-ede2e62dc6c3)
+
 
 set(CMAKE_CXX_STANDARD 14)
 추가하기
