@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 14)
 추가하기
    ```
 ![스크린샷 2025-01-03 154508](https://github.com/user-attachments/assets/6f72651f-45ed-41eb-bef2-528323abce26)
+![image](https://github.com/user-attachments/assets/b24f11df-98cc-44f4-b62e-08705b911ccf)
 
 
 ```opencv 공식 사이트에서 원하는 버전 다운로드 받는다.
