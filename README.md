@@ -1,6 +1,7 @@
 # qt-window-opencv-install-guide
 
 ```
+https://1d1cblog.tistory.com/448 참고 링크
 설치시 문제가 생긴다면
 CMakeLists.txt 파일 내부에
 set(CMAKE_CXX_STANDARD 14)
